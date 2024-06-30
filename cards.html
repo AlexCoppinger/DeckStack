@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cards</title>
+  </head>
+  <body>
+    <h1>DeckStack</h1>
+    
+    <p><strong>DeckStack</strong> is the name I'm going to go with for now</p>
+    
+    <img 
+      src="https://hips.hearstapps.com/hmg-prod/images/best-card-games-1593784219.jpg?crop=0.668xw:1.00xh;0.167xw,0&resize=980:*"
+      alt="Card icon"
+      width="100"
+      heigh="100"
+      />
+
+    <p></p> 
+
+    <a href="https://www.youtube.com"
+    title="YouTube">
+    A link to YouTube
+    </a>
+
+    <p></p>
+
+  
+
+    <label for="prompt">Write your prompt: </label>
+    <input type="text" id="prompt" class="promptField" />
+    <input type="submit" value="Submit" class="submitPrompt" />
+
+    <p></p>
+
+    <label for="response">Write your response: </label>
+    <input type="text" id="response" class="responseField" />
+    <input type="submit" value="Submit" class="submitReponse" /> 
+
+    <p></p>
+
+    <input type="submit" value="Display Cards" class="displayCards"/>
+ 
+    <div id="display"></div> <!-- this will display text -->
+
+    
+
+    <script>
+
+//This part is just for setting up classes and stuff, which includes the decks and players (and their decks)
+
+
+class Deck {
+    numcards; //number of cards in deck
+    cards; //array of strings
+
+    //Could add an enum to see if this deck is a prompt or a response deck
+
+    constructor() {
+        this.cards = [];
+        this.numcards = 0;
+    }
+
+    addCard(string) {
+        this.cards[this.numcards] = string;
+        this.numcards++;
+    };
+
+    removeCard(n) {
+        this.cards.splice(n, 1);  
+        this.numcards--;
+    };
+}
+
+class Player {
+    numwins; //This is the number of wins a player has
+    name; 
+    wcards; //This is the array of prompt cards that were won 
+    rcards; //This is the array of response cards that they currently have in their deck
+    constructor(pname) {
+        this.numwins = 0; //Initialize numwins to 0
+        this.name = pname; 
+        this.wcards = new Deck();
+        this.rcards = new Deck();
+        //cards
+    }
+
+    addResponse(responses, m) { //Takes the deck and the number of the card within that deck, and the number of the card in your own deck
+        this.rcards.addCard(responses.cards[m]); //Adds the card at index m
+        responses.Removecard(m);
+        
+    };
+
+    swapResponse(responses, n, m) {
+        this.rcards.removeCard(n); //Removes the card chosen
+        this.rcards.addCard(responses.cards[m]); //Adds the card at index m
+        responses.Removecard(m);
+    }
+
+    addPrompt(prompts, n, m) {
+        this.wcards.removeCard(n);
+        this.wcards.addCard(prompts.cards[m]);
+        prompts.Removecard(m);
+    };
+}
+
+const promptButton = document.querySelector('.submitPrompt');
+const responseButton = document.querySelector('.submitResponse')
+const displayButton = document.querySelector('.displayCards')
+const promptField = document.querySelector('#prompt');
+const responseField = document.querySelector('#response')
+const outputDiv = document.querySelector('#display');
+
+
+
+//Useful functions
+
+function printCards(deck) {
+  let outputText; //This is to output the text
+
+  //THIS IS ALL IF THE DECK EVEN HAS CARD
+  outputText = '0' + ' - ' + deck.cards[0];
+
+    for (let i = 1; i < deck.numcards; i++) {
+      outputText = outputText.concat('<br>' + i + ' - ' + deck.cards[i]);
+    }
+
+    outputDiv.innerHTML = outputText; 
+}
+
+
+
+//Create the decks
+
+let prompts = new Deck();
+let responses = new Deck();
+
+
+
+
+/*This next part is for the actual buttons on the page*/
+  
+// PROMPT BUTTON
+responseButton.addEventListener('click', function(event) { //Adds a card
+  // alert("prompt button clicked");
+  event.stopPropagation();
+  const promptText = promptField.value; //This gets the value of the text field
+  prompts.addCard(promptText);
+  outputDiv.textContent = 'Card added to prompts: ' + promptText;
+});
+
+
+//RESPONSE BUTTON
+// responseButton.addEventListener('click', function(event) { //Adds a card
+//   event.stopPropagation();
+//   alert("response button clicked");
+//   const responseText = responseField.value; //This gets the value of the text field
+//   responses.Addcard(responseText);
+//   outputDiv.textContent = 'Card added to responses: ' + responseText;
+// });
+
+// //DISPLAY BUTTON
+// displayButton.addEventListener('click', function(event) { //displays all your cards at the end
+//   // alert("prompt button clicked");
+//   event.stopPropagation();
+//   // outputDiv.innerHTML = 'Prompts: <br>'
+//   printCards(prompts);
+//   // outputDiv.innerHTML = '<br> Responses: <br>'
+//   // printCards(responses)
+// });
+
+    </script>
+  </body>
+</html>
